@@ -1,8 +1,8 @@
-# cronpulse-lite
+# cronpulse-lite: cron job monitoring with failure alerts in one Python file
 
 **Cron jobs fail silently. This tells you when they do.**
 
-A single-file, zero-dependency Python wrapper for cron jobs and scripts. It runs your command, records the exit code, duration and the last lines of output, kills it if it hangs, and posts an alert to Slack, Discord or any webhook when it fails.
+A single-file, zero-dependency Python wrapper that helps with cron job monitoring: it runs your command, records the exit code, duration and the last lines of output, kills it if it hangs, and posts an alert to Slack, Discord or any webhook when it fails.
 
 - One file, Python 3.8+ standard library only. Nothing to `pip install`.
 - Your job's exit code is passed through, so existing cron/CI logic keeps working.
@@ -16,7 +16,7 @@ chmod +x cronpulse_lite.py
 ./cronpulse_lite.py --help
 ```
 
-## Usage
+## Get a Slack or Discord alert when a cron job fails
 
 ```bash
 export CRONPULSE_LITE_WEBHOOK=https://hooks.slack.com/services/XXX/YYY/ZZZ
@@ -37,6 +37,8 @@ Crontab:
 0 3 * * *  /usr/local/bin/cronpulse_lite.py run --name db-backup --timeout 1h -- /opt/scripts/backup.sh
 ```
 
+### Cron job timeout: kill hung jobs
+
 | Situation | What happens |
 |---|---|
 | Job exits non-zero | logged as `failed`, alert sent, same exit code returned |
@@ -48,7 +50,7 @@ Webhook payloads: Slack (`text`), Discord (`content`), anything else gets the JS
 
 Log location: `~/.cronpulse-lite.jsonl` (override with `--log` or `CRONPULSE_LITE_LOG`).
 
-## What lite does not do
+## Detect missed cron jobs: cronpulse-lite vs CronPulse CLI
 
 cronpulse-lite catches jobs that **fail or hang**. It cannot notice a job that **never started** (cron daemon down, server rebooted, crontab line deleted), because nothing runs to report it.
 
