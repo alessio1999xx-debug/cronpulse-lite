@@ -4,7 +4,7 @@
 
 A single-file, zero-dependency Python wrapper that helps with cron job monitoring: it runs your command, records the exit code, duration and the last lines of output, kills it if it hangs, and posts an alert to Slack, Discord or any webhook when it fails.
 
-- One file, Python 3.8+ standard library only. Nothing to `pip install`.
+- One file, Python 3.9+ standard library only. Nothing to `pip install`.
 - Your job's exit code is passed through, so existing cron/CI logic keeps working.
 - Runs are kept in a local JSONL log you can `grep` or `jq`.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """cronpulse-lite: wrap a cron job, record how it ran, and alert a webhook when it fails.
 
-Single file, Python 3.8+ standard library only.
+Single file, Python 3.9+ standard library only.
 
     cronpulse_lite.py run --name backup --timeout 10m --webhook "$URL" -- ./backup.sh
     cronpulse_lite.py status
