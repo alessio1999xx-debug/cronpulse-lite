@@ -8,6 +8,8 @@ A single-file, zero-dependency Python wrapper that helps with cron job monitorin
 - Your job's exit code is passed through, so existing cron/CI logic keeps working.
 - Runs are kept in a local JSONL log you can `grep` or `jq`.
 
+Need missed-job detection, a small dashboard, or Telegram alerts? That is the full [CronPulse CLI](https://py-forge.com/products/cronpulse-cli?utm_source=github&utm_medium=readme&utm_campaign=cronpulse-lite) (one-time payment, yours to keep, no subscription). A table later in this README lists what lite does and what the paid tool adds. Or get every PyForge tool, current and future, with the [All-Access Pass](https://py-forge.com/pass?utm_source=github&utm_medium=readme&utm_campaign=cronpulse-lite) ($99, one payment).
+
 ## Install
 
 ```bash
@@ -29,6 +31,19 @@ export CRONPULSE_LITE_WEBHOOK=https://hooks.slack.com/services/XXX/YYY/ZZZ
 
 # recent runs of one job
 ./cronpulse_lite.py history db-backup
+```
+
+Example output, recorded 25 Nov 2026 (Europe/Rome) on a throwaway failing command (no webhook was set, so nothing was posted). Exit code `1`. Duration is from that run.
+
+```text
+$ python3 cronpulse_lite.py --log ./cronpulse.jsonl run --name backup --timeout 5 -- /bin/sh -c 'echo backup starting; echo permission denied >&2; exit 1'
+backup starting
+permission denied
+cronpulse-lite: backup failed (exit 1, 0.001s)
+
+$ python3 cronpulse_lite.py --log ./cronpulse.jsonl status
+JOB                      STATUS   EXIT  DURATION  LAST RUN
+backup                   failed      1    0.001s  2026-11-25T00:23:00+0100
 ```
 
 Crontab:
@@ -54,15 +69,15 @@ Log location: `~/.cronpulse-lite.jsonl` (override with `--log` or `CRONPULSE_LIT
 
 cronpulse-lite catches jobs that **fail or hang**. It cannot notice a job that **never started** (cron daemon down, server rebooted, crontab line deleted), because nothing runs to report it.
 
-For that, the full **[CronPulse CLI](https://py-forge.com/products/cronpulse-cli?utm_source=github&utm_medium=readme&utm_campaign=cronpulse-lite)** adds:
+| Capability | Lite (free) | Paid CronPulse CLI |
+| --- | --- | --- |
+| Wrap a job (`run`): exit code, duration, output tail, timeout | Yes | Yes, plus peak memory (`--max-memory-mb`) |
+| Local history | JSONL log, `status` and `history` | SQLite history, JSON or Markdown reports |
+| Alert when a run fails or hangs | Slack, Discord or a generic webhook | Slack, Discord, Telegram or a webhook |
+| Missed check-in (the job never started) | No | Yes (`add` registers the expected interval; a missing check-in triggers an alert) |
+| Heartbeat endpoint and HTML dashboard | No | Yes (`ping` / `serve`) |
 
-- missed check-in detection (`--every 1d --grace 30m`) for jobs that silently stop running
-- a self-hosted heartbeat server (`curl .../ping/<job>`) for containers and other machines, plus an HTML dashboard
-- Slack, Discord, Telegram and generic webhooks, with one alert per failure streak and a recovery alert
-- overrun and peak-memory limits, SQLite history, JSON/Markdown reports
-- still a single file using only the standard library
-
-One-time payment, yours to keep. No subscription. [Get CronPulse CLI →](https://py-forge.com/products/cronpulse-cli?utm_source=github&utm_medium=readme&utm_campaign=cronpulse-lite)
+One-time payment, yours to keep. No subscription. [Get CronPulse CLI →](https://py-forge.com/products/cronpulse-cli?utm_source=github&utm_medium=readme&utm_campaign=cronpulse-lite). Or get every PyForge tool, current and future, with the [All-Access Pass](https://py-forge.com/pass?utm_source=github&utm_medium=readme&utm_campaign=cronpulse-lite) ($99, one payment).
 
 More small self-hosted Python tools: [py-forge.com](https://py-forge.com/?utm_source=github&utm_medium=readme&utm_campaign=cronpulse-lite)
 
