@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cronpulse-lite"
+version = "0.1.0"
+description = "Cron job monitoring in one Python file: alerts to Slack, Discord or a webhook on failure or hang."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.8"
+authors = [{name = "Alessio Auretto"}]
+
+[project.urls]
+Homepage = "https://py-forge.com/products/cronpulse-cli?utm_source=pypi&utm_medium=project_page&utm_campaign=cronpulse-lite"
+Repository = "https://github.com/alessio1999xx-debug/cronpulse-lite"
+
+[project.scripts]
+cronpulse-lite = "cronpulse_lite:main"
+
+[tool.setuptools]
+py-modules = ["cronpulse_lite"]
